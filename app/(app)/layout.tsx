@@ -8,14 +8,23 @@ import {
 } from "@/components/editor/project-dialog-context"
 
 function EditorLayoutWithContext({ children }: { children: React.ReactNode }) {
-  const { openCreateDialog, openRenameDialog, openDeleteDialog } =
-    useProjectDialogContext()
+  const {
+    projects,
+    isProjectsLoading,
+    projectsError,
+    openCreateDialog,
+    openRenameDialog,
+    openDeleteDialog,
+  } = useProjectDialogContext()
 
   return (
     <EditorLayout
       onCreateProject={openCreateDialog}
       onRenameProject={openRenameDialog}
       onDeleteProject={openDeleteDialog}
+      projects={projects}
+      isProjectsLoading={isProjectsLoading}
+      projectsError={projectsError}
     >
       {children}
     </EditorLayout>

@@ -1,91 +1,81 @@
 # Progress Tracker
 
-Update this file after every meaningful implementation
-change.
+Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- Complete (04-project-dialogs)
+- Complete (05-project-persistence-code)
 
 ## Current Goal
 
-- Ready for next feature implementation (e.g. database schema / persistence or canvas)
+- Configure Clerk as the Supabase Third-Party Auth provider so authenticated project requests can pass RLS.
 
 ## Completed
 
 - `01-design-system.md`:
-  - Installed and configured `shadcn/ui` with Tailwind CSS v4
-  - Installed `lucide-react`
-  - Added UI primitive components: `Button`, `Card`, `Dialog`, `Input`, `Tabs`, `Textarea`, `ScrollArea`
-  - Created `lib/utils.ts` with reusable `cn()` helper
-  - Configured dark-only styling in `globals.css` and `app/layout.tsx`
-  - Verified component imports, build pass, and styling consistency
+  - Installed and configured shadcn/ui with Tailwind CSS v4.
+  - Installed lucide-react and the shared `cn()` helper.
+  - Added Button, Card, Dialog, Input, Tabs, Textarea, and ScrollArea primitives.
+  - Configured the dark-only styling system.
 
 - `02-editor.md`:
-  - Created `components/editor/editor-navbar.tsx` with sidebar toggle
-  - Created `components/editor/project-sidebar.tsx` with tabs and empty states
-  - Sidebar floats above content with backdrop overlay
-  - Uses `PanelLeftOpen`/`PanelLeftClose` icons for toggle
-  - Tabs show "My Projects" and "Shared" with placeholder states
-  - "New Project" button with `Plus` icon at bottom
-  - Verified TypeScript compilation and ESLint pass
+  - Added the editor navbar and floating project sidebar shell.
+  - Added project tabs, empty states, sidebar toggle, and mobile backdrop behavior.
 
 - `03-auth.md`:
-  - Installed `@clerk/themes` package
-  - Wrapped root layout with `ClerkProvider` using `dark` theme from `@clerk/ui/themes`
-  - Created `proxy.ts` at project root with `clerkMiddleware` for route protection
-  - Public routes: `/sign-in(.*)` and `/sign-up(.*)`
-  - All other routes protected by default
-  - Created sign-in page at `app/(auth)/sign-in/[[...sign-in]]/page.tsx`
-  - Created sign-up page at `app/(auth)/sign-up/[[...sign-up]]/page.tsx`
-  - Both auth pages use two-panel layout: left panel with logo and feature list (desktop), right panel with Clerk form
-  - Updated home page (`app/page.tsx`) to redirect authenticated users to `/editor` and unauthenticated users to `/sign-in`
-  - Created `/editor` page placeholder
-  - Added `UserButton` component to editor navbar right section
-  - Verified `npm run build` passes
+  - Configured ClerkProvider with Clerk's dark theme mapped to the Ghost Collab AI CSS design tokens.
+  - Applied the Clerk warning-orange primary action, near-black card/input surfaces, muted text, borders, focus ring, danger state, Geist typography, and rounded-corner decisions to Clerk components.
+  - Updated sign-in and sign-up to use a responsive 50/50 split layout with Ghost Collab AI product information on the left and Clerk forms on the right.
+  - Added a shared `AuthProductPanel` so both auth routes use the same product messaging and visual language.
+  - Explicitly configured Clerk path routing and local sign-in/sign-up redirect URLs so auth stays on `/sign-in`, `/sign-up`, and `/editor` instead of falling back to the hosted `accounts.dev` page.
+  - Added protected routes through root `proxy.ts`.
+  - Added sign-in/sign-up pages, redirects, and the editor UserButton.
 
 - `04-project-dialogs.md`:
-  - Installed `dropdown-menu` primitive via shadcn CLI
-  - Created `hooks/use-project-dialogs.tsx` hook managing dialog state, form state, slug generation, and loading state
-  - Created `components/editor/project-dialogs.tsx` with `CreateProjectDialog` (live slug preview), `RenameProjectDialog` (auto-focus, Enter to submit), and `DeleteProjectDialog` (destructive styling)
-  - Created `components/editor/editor-home.tsx` with centered minimal layout, heading, description, and "New Project" button (no cards)
-  - Updated `components/editor/project-sidebar.tsx` with mock owned and shared projects, dropdown actions (rename/delete) visible only on owned projects, and mobile backdrop scrim
-  - Created `components/editor/project-dialog-context.tsx` and structured `app/(app)` layout to wrap editor views with dialog provider and layout chrome
-  - Wired editor home and sidebar actions to open corresponding dialogs
-  - Verified `npm run build` and `npm run lint` pass without errors
+  - Added create, rename, and delete project dialogs.
+  - Added live slug previews and dialog state management.
+  - Wired editor home and sidebar actions to the dialogs.
+
+- `05-project-persistence`:
+  - Installed pinned `@supabase/supabase-js@2.116.0`.
+  - Added `projects` and `project_members` Supabase migration tables.
+  - Added grants, indexes, constraints, cascading membership deletes, and RLS policies.
+  - Added Clerk-token-backed Supabase server client construction.
+  - Added project service validation, slug generation, CRUD operations, and database error translation.
+  - Added authenticated project API routes for list, create, retrieve, rename, and delete.
+  - Replaced mock sidebar projects with fetched project data.
+  - Wired create, rename, and delete dialogs to the API and refresh behavior.
+  - Added loading and request-error states to the project sidebar and dialogs.
+  - Updated architecture and code standards to use Supabase instead of Prisma.
 
 ## In Progress
 
-- None
+- Supabase project and migrations are configured. Clerk Third-Party Auth is still pending in the Supabase dashboard.
 
 ## Open Questions
 
-- None
+- No product questions for the current persistence slice.
+- Invitation UX and collaborator management remain deferred until the collaboration feature.
 
 ## Architecture Decisions
 
-- Configured global dark theme as the default to align with `context/ui-context.md` dark-only workspace design language.
-- Using `proxy.ts` instead of `middleware.ts` as specified in the auth spec.
-- Clerk auth uses CSS variables through the `dark` theme from `@clerk/ui/themes`.
-- Moved editor pages into `app/(app)` route group with `AppLayout` and `ProjectDialogProvider` so auth routes are clean and editor routes share dialog context and layout chrome.
+- Clerk remains the identity provider; Supabase Auth is not used for application sign-in.
+- Clerk UI uses the `dark` base theme from `@clerk/ui/themes`, with appearance variables mapped to the shared `globals.css` tokens instead of a separate auth color system.
+- Clerk sign-in/sign-up cards are flat dark surfaces with subtle borders; primary actions use the Clerk warning-orange token, and inputs/social buttons use the existing dark surface hierarchy.
+- Geist Sans is the shared Clerk UI font and Geist Mono is used for code/OTP-oriented text.
+- The built-in Clerk UserButton and profile flows remain behaviorally unchanged; only their visual foundation is themed.
+- Clerk session tokens are passed to Supabase through the server client `accessToken` option.
+- Clerk user IDs are stored as text from the token `sub` claim.
+- Project ownership is stored on `projects.owner_id`; collaborator access is stored in `project_members`.
+- Project IDs are UUIDs for internal relations; unique slugs are user-facing and regenerated on rename.
+- Project metadata is stored in Supabase Postgres; large canvas/spec artifacts remain in Vercel Blob.
+- RLS is enabled on all current public tables. Owners mutate project metadata and memberships; collaborators read accessible projects.
 
 ## Session Notes
 
-- All design system components in `components/ui/*` installed and verified.
-- Next.js production build (`npm run build`) and linting (`npm run lint`) passing cleanly.
-
-## Open Questions
-
-- None
-
-## Architecture Decisions
-
-- Configured global dark theme as the default to align with `context/ui-context.md` dark-only workspace design language.
-- Using `proxy.ts` instead of `middleware.ts` as specified in the auth spec.
-- Clerk auth uses CSS variables through the `dark` theme from `@clerk/ui/themes`.
-
-## Session Notes
-
-- All design system components in `components/ui/*` installed and verified without modifications.
-- Next.js production build (`npm run build`) passing cleanly.
-- Clerk environment variables already configured in `.env.local`.
+- `npm run lint` passes.
+- `npx tsc --noEmit` passes.
+- The Supabase CLI was not globally installed; `npx supabase migration new project_persistence` created the migration successfully.
+- The `project_persistence` and `optimize_project_policies` migrations are applied to the hosted `ghost-collab-ai` Supabase project.
+- Supabase security advisors report no findings. The performance advisor only reports the currently unused membership index while the table is empty.
+- Supabase environment variables are present in `.env.local`; the Supabase Third-Party Auth page currently has no providers configured.

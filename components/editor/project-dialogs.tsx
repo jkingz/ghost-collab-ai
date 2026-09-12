@@ -20,6 +20,7 @@ interface CreateProjectDialogProps {
   onNameChange: (name: string) => void
   onSubmit: () => void
   isLoading: boolean
+  error?: string | null
 }
 
 export function CreateProjectDialog({
@@ -30,6 +31,7 @@ export function CreateProjectDialog({
   onNameChange,
   onSubmit,
   isLoading,
+  error,
 }: CreateProjectDialogProps) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !isLoading && name.trim()) {
@@ -46,6 +48,7 @@ export function CreateProjectDialog({
           <DialogDescription>
             Start a new architecture workspace.
           </DialogDescription>
+          {error && <p className="text-sm text-destructive">{error}</p>}
         </DialogHeader>
 
         <div className="space-y-4 py-4">
@@ -97,6 +100,7 @@ interface RenameProjectDialogProps {
   onNameChange: (name: string) => void
   onSubmit: () => void
   isLoading: boolean
+  error?: string | null
 }
 
 export function RenameProjectDialog({
@@ -107,6 +111,7 @@ export function RenameProjectDialog({
   onNameChange,
   onSubmit,
   isLoading,
+  error,
 }: RenameProjectDialogProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -135,6 +140,7 @@ export function RenameProjectDialog({
           <DialogDescription>
             Rename &quot;{currentName}&quot;
           </DialogDescription>
+          {error && <p className="text-sm text-destructive">{error}</p>}
         </DialogHeader>
 
         <div className="space-y-4 py-4">
@@ -177,6 +183,7 @@ interface DeleteProjectDialogProps {
   projectName: string
   onConfirm: () => void
   isLoading: boolean
+  error?: string | null
 }
 
 export function DeleteProjectDialog({
@@ -185,6 +192,7 @@ export function DeleteProjectDialog({
   projectName,
   onConfirm,
   isLoading,
+  error,
 }: DeleteProjectDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -195,6 +203,7 @@ export function DeleteProjectDialog({
             Are you sure you want to delete &quot;{projectName}&quot;? This action
             cannot be undone.
           </DialogDescription>
+          {error && <p className="text-sm text-destructive">{error}</p>}
         </DialogHeader>
 
         <DialogFooter>

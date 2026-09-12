@@ -3,6 +3,8 @@
 import * as React from "react"
 import { createContext, useContext } from "react"
 import { useProjectDialogs } from "@/hooks/use-project-dialogs"
+import { useProjects } from "@/hooks/use-projects"
+import type { Project } from "@/types/project"
 import {
   CreateProjectDialog,
   RenameProjectDialog,
@@ -10,6 +12,9 @@ import {
 } from "@/components/editor/project-dialogs"
 
 interface ProjectDialogContextValue {
+  projects: Project[]
+  isProjectsLoading: boolean
+  projectsError: string | null
   openCreateDialog: () => void
   openRenameDialog: (projectId: string, currentName: string) => void
   openDeleteDialog: (projectId: string, projectName: string) => void
@@ -33,9 +38,16 @@ export function ProjectDialogProvider({
   children: React.ReactNode
 }) {
   const {
+    projects,
+    isLoading: isProjectsLoading,
+    error: projectsError,
+    refreshProjects,
+  } = useProjects()
+  const {
     dialogState,
     formState,
     isLoading,
+    error,
     openCreateDialog,
     openRenameDialog,
     openDeleteDialog,
@@ -44,11 +56,14 @@ export function ProjectDialogProvider({
     handleCreate,
     handleRename,
     handleDelete,
-  } = useProjectDialogs()
+  } = useProjectDialogs(refreshProjects)
 
   return (
     <ProjectDialogContext.Provider
       value={{
+        projects,
+        isProjectsLoading,
+        projectsError,
         openCreateDialog,
         openRenameDialog,
         openDeleteDialog,
@@ -65,6 +80,7 @@ export function ProjectDialogProvider({
         onNameChange={updateName}
         onSubmit={handleCreate}
         isLoading={isLoading}
+        error={error}
       />
 
       {/* Rename Project Dialog */}
@@ -76,6 +92,7 @@ export function ProjectDialogProvider({
         onNameChange={updateName}
         onSubmit={handleRename}
         isLoading={isLoading}
+        error={error}
       />
 
       {/* Delete Project Dialog */}
@@ -85,6 +102,7 @@ export function ProjectDialogProvider({
         projectName={dialogState.projectName || ""}
         onConfirm={handleDelete}
         isLoading={isLoading}
+        error={error}
       />
     </ProjectDialogContext.Provider>
   )
