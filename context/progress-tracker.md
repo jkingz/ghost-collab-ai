@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Complete (01-design-system)
+- Complete (02-editor)
 
 ## Current Goal
 
-- Design system setup complete; ready for next feature implementation
+- Editor chrome components complete; ready for next feature implementation
 
 ## Completed
 
@@ -21,13 +21,18 @@ change.
   - Configured dark-only styling in `globals.css` and `app/layout.tsx`
   - Verified component imports, build pass, and styling consistency
 
+- `02-editor.md`:
+  - Created `components/editor/editor-navbar.tsx` with sidebar toggle
+  - Created `components/editor/project-sidebar.tsx` with tabs and empty states
+  - Sidebar floats above content with backdrop overlay
+  - Uses `PanelLeftOpen`/`PanelLeftClose` icons for toggle
+  - Tabs show "My Projects" and "Shared" with placeholder states
+  - "New Project" button with `Plus` icon at bottom
+  - Verified TypeScript compilation and ESLint pass
+
 ## In Progress
 
 - None
-
-## Next Up
-
-- Next feature spec
 
 ## Open Questions
 
