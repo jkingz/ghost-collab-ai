@@ -1,8 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ghost Collab AI
+
+A real-time collaborative system design workspace where teams describe systems in plain English, AI generates architecture diagrams, and collaborators refine designs into technical specifications.
+
+## What is Ghost Collab AI?
+
+Ghost Collab AI transforms system architecture design from static documents into collaborative, AI-assisted workflows. Users describe a system, an AI agent maps it onto a shared canvas, teams refine the architecture together in real-time, and the app generates production-ready technical specifications from the final design.
+
+## Core Features
+
+### 🎨 Real-time Collaborative Canvas
+- Shared workspace powered by Liveblocks and React Flow
+- Live cursors and presence indicators
+- Simultaneous editing by multiple collaborators
+- Visual system architecture with nodes and edges
+
+### 🤖 AI-Powered Architecture Generation
+- Generate system designs from natural language prompts
+- AI creates nodes and edges directly in the shared canvas
+- Extend existing designs with additional components
+- Background processing for complex architectures
+
+### 📚 Starter System Design Templates
+- Curated library of prebuilt architecture patterns
+- Common patterns: monolith, microservices, event-driven, serverless
+- Import templates at any point during editing
+- Accelerate design with proven architectural patterns
+
+### 📝 Technical Specification Generation
+- Convert canvas graphs into Markdown technical specs
+- Persistent storage and versioning
+- Download specifications for documentation
+- AI-powered spec generation from visual designs
+
+### 👥 Project Management
+- Multi-project workspace
+- Project ownership and collaborator access
+- Secure authentication via Clerk
+- Team-based collaboration
+
+## Tech Stack
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Framework | Next.js 16 + TypeScript | Full-stack application |
+| UI | Tailwind + shadcn/ui | Component library and styling |
+| Auth | Clerk | Authentication and session management |
+| Database | Supabase Postgres | Project metadata and persistence |
+| Canvas | Liveblocks + React Flow | Real-time collaboration |
+| Background Tasks | Trigger.dev | Durable AI workflows |
+| Storage | Vercel Blob | Canvas snapshots and specs |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ (or Bun)
+- A Clerk account for authentication
+- A Supabase project for persistence
+- A Liveblocks account for real-time collaboration
+
+### Environment Setup
+
+1. Copy `.env.example` to `.env.local` and fill in your credentials:
+
+```bash
+cp .env.example .env.local
+```
+
+2. Configure Clerk as a Supabase Third-Party Auth provider
+3. Apply database migrations:
+
+```bash
+supabase migration up
+```
+
+Or run the migration through the Supabase SQL editor:
+- `supabase/migrations/20260912222527_project_persistence.sql`
+
+4. Verify Clerk session tokens include the `role: authenticated` claim
+
+### Run Development Server
 
 ```bash
 npm run dev
@@ -14,36 +91,68 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## User Flow
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Sign in** — Authenticate with Clerk
+2. **Create or select a project** — Manage multiple architecture projects
+3. **Import a starter template** (optional) — Begin with proven patterns
+4. **Generate architecture** — Describe your system in plain English
+5. **Collaborate in real-time** — Refine the design with your team
+6. **Generate specification** — Convert the canvas into a technical spec
+7. **Download and share** — Export documentation for your team
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+ghost-ai/
+├── app/                    # Next.js app router
+│   ├── api/               # API routes for projects and Liveblocks auth
+│   └── (routes)/          # Page routes
+├── components/            # React components
+├── lib/                   # Utilities and service layers
+│   ├── supabase/         # Database client and operations
+│   └── projects/         # Project persistence logic
+├── trigger/              # Background task definitions
+├── supabase/migrations/  # Database schema
+├── types/                # TypeScript definitions
+└── context/              # Project documentation
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Database Schema
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The application uses Supabase Postgres with RLS policies:
 
-## Deploy on Vercel
+- **projects** — Project metadata, owner, name, and slug
+- **project_members** — Collaborator memberships
+- Future tables for canvas snapshots, specs, and task runs
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Owners can manage their projects; collaborators have read access to projects they belong to.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# ghost-collab-ai
+## API Routes
 
-## Supabase persistence setup
+- `GET /api/projects` — List visible projects
+- `POST /api/projects` — Create a new project
+- `GET /api/projects/{projectId}` — Retrieve project details
+- `PATCH /api/projects/{projectId}` — Update project name
+- `DELETE /api/projects/{projectId}` — Delete owned project
 
-The application keeps Clerk as its identity provider and uses Supabase Postgres for project persistence.
+## Contributing
 
-1. Create or select a Supabase project.
-2. Connect the Clerk instance to Supabase using Clerk's Supabase integration, then add Clerk as a Supabase Third-Party Auth provider.
-3. Add the variables from `.env.example` to `.env.local`.
-4. Apply `supabase/migrations/20260912222527_project_persistence.sql` through the Supabase CLI or SQL editor.
-5. Verify that the Clerk session token contains the `role: authenticated` claim.
+This project follows conventions documented in:
+- `context/code-standards.md` — Implementation rules
+- `context/ai-workflow-rules.md` — Development workflow
+- `AGENTS.md` — AI agent guidelines for Next.js
 
-The project API is available at `/api/projects`. The database migration enables RLS and allows owners to manage project metadata while collaborators can read projects they belong to.
+## Architecture Documentation
+
+Complete architecture and design context is available in the `/context` directory:
+- `project-overview.md` — Goals, features, and scope
+- `architecture-context.md` — Stack, boundaries, and storage model
+- `ui-context.md` — Design system and component conventions
+- `progress-tracker.md` — Current status and next steps
+
+## License
+
+[Add your license here]
