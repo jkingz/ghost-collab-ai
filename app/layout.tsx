@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ghost AI",
+  title: "Ghost Collab AI",
   description: "Real-time collaborative system design workspace",
 };
 
@@ -33,7 +33,7 @@ export default function RootLayout({
         lang="en"
         className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
       >
-        <body className="min-h-full flex flex-col">
+        <body className="min-h-full flex flex-col font-sans">
           <EditorLayout>{children}</EditorLayout>
         </body>
       </html>

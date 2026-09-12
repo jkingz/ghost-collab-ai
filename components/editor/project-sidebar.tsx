@@ -38,23 +38,29 @@ export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
         {/* Tabs for Project Categories */}
         <div className="flex-1 p-4 overflow-hidden flex flex-col">
           <Tabs defaultValue="my-projects" className="flex-1 flex flex-col">
-            <TabsList className="w-full">
-              <TabsTrigger value="my-projects" className="flex-1">
+            <TabsList className="w-full grid grid-cols-2 p-1 bg-muted/60 rounded-xl border border-border">
+              <TabsTrigger
+                value="my-projects"
+                className="rounded-lg text-xs font-medium text-muted-foreground data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs transition-all"
+              >
                 My Projects
               </TabsTrigger>
-              <TabsTrigger value="shared" className="flex-1">
+              <TabsTrigger
+                value="shared"
+                className="rounded-lg text-xs font-medium text-muted-foreground data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs transition-all"
+              >
                 Shared
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="my-projects" className="flex-1 mt-4">
-              <div className="h-full flex items-center justify-center border border-dashed border-border rounded-lg p-6 text-center text-muted-foreground text-sm">
+              <div className="h-full flex items-center justify-center border border-dashed border-border rounded-xl p-6 text-center text-muted-foreground text-sm bg-muted/20">
                 No projects yet. Create your first project below.
               </div>
             </TabsContent>
 
             <TabsContent value="shared" className="flex-1 mt-4">
-              <div className="h-full flex items-center justify-center border border-dashed border-border rounded-lg p-6 text-center text-muted-foreground text-sm">
+              <div className="h-full flex items-center justify-center border border-dashed border-border rounded-xl p-6 text-center text-muted-foreground text-sm bg-muted/20">
                 No shared projects available.
               </div>
             </TabsContent>
