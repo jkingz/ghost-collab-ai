@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Complete (03-auth)
+- Complete (04-project-dialogs)
 
 ## Current Goal
 
-- Authentication complete; ready for next feature implementation
+- Ready for next feature implementation (e.g. database schema / persistence or canvas)
 
 ## Completed
 
@@ -44,9 +44,35 @@ change.
   - Added `UserButton` component to editor navbar right section
   - Verified `npm run build` passes
 
+- `04-project-dialogs.md`:
+  - Installed `dropdown-menu` primitive via shadcn CLI
+  - Created `hooks/use-project-dialogs.tsx` hook managing dialog state, form state, slug generation, and loading state
+  - Created `components/editor/project-dialogs.tsx` with `CreateProjectDialog` (live slug preview), `RenameProjectDialog` (auto-focus, Enter to submit), and `DeleteProjectDialog` (destructive styling)
+  - Created `components/editor/editor-home.tsx` with centered minimal layout, heading, description, and "New Project" button (no cards)
+  - Updated `components/editor/project-sidebar.tsx` with mock owned and shared projects, dropdown actions (rename/delete) visible only on owned projects, and mobile backdrop scrim
+  - Created `components/editor/project-dialog-context.tsx` and structured `app/(app)` layout to wrap editor views with dialog provider and layout chrome
+  - Wired editor home and sidebar actions to open corresponding dialogs
+  - Verified `npm run build` and `npm run lint` pass without errors
+
 ## In Progress
 
 - None
+
+## Open Questions
+
+- None
+
+## Architecture Decisions
+
+- Configured global dark theme as the default to align with `context/ui-context.md` dark-only workspace design language.
+- Using `proxy.ts` instead of `middleware.ts` as specified in the auth spec.
+- Clerk auth uses CSS variables through the `dark` theme from `@clerk/ui/themes`.
+- Moved editor pages into `app/(app)` route group with `AppLayout` and `ProjectDialogProvider` so auth routes are clean and editor routes share dialog context and layout chrome.
+
+## Session Notes
+
+- All design system components in `components/ui/*` installed and verified.
+- Next.js production build (`npm run build`) and linting (`npm run lint`) passing cleanly.
 
 ## Open Questions
 
