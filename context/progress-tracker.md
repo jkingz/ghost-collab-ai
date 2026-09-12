@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Complete (02-editor)
+- Complete (03-auth)
 
 ## Current Goal
 
-- Editor chrome components complete; ready for next feature implementation
+- Authentication complete; ready for next feature implementation
 
 ## Completed
 
@@ -30,6 +30,20 @@ change.
   - "New Project" button with `Plus` icon at bottom
   - Verified TypeScript compilation and ESLint pass
 
+- `03-auth.md`:
+  - Installed `@clerk/themes` package
+  - Wrapped root layout with `ClerkProvider` using `dark` theme from `@clerk/ui/themes`
+  - Created `proxy.ts` at project root with `clerkMiddleware` for route protection
+  - Public routes: `/sign-in(.*)` and `/sign-up(.*)`
+  - All other routes protected by default
+  - Created sign-in page at `app/(auth)/sign-in/[[...sign-in]]/page.tsx`
+  - Created sign-up page at `app/(auth)/sign-up/[[...sign-up]]/page.tsx`
+  - Both auth pages use two-panel layout: left panel with logo and feature list (desktop), right panel with Clerk form
+  - Updated home page (`app/page.tsx`) to redirect authenticated users to `/editor` and unauthenticated users to `/sign-in`
+  - Created `/editor` page placeholder
+  - Added `UserButton` component to editor navbar right section
+  - Verified `npm run build` passes
+
 ## In Progress
 
 - None
@@ -41,8 +55,11 @@ change.
 ## Architecture Decisions
 
 - Configured global dark theme as the default to align with `context/ui-context.md` dark-only workspace design language.
+- Using `proxy.ts` instead of `middleware.ts` as specified in the auth spec.
+- Clerk auth uses CSS variables through the `dark` theme from `@clerk/ui/themes`.
 
 ## Session Notes
 
 - All design system components in `components/ui/*` installed and verified without modifications.
 - Next.js production build (`npm run build`) passing cleanly.
+- Clerk environment variables already configured in `.env.local`.
