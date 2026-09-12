@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { EditorLayout } from "@/components/editor/editor-layout";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/ui/themes";
 
@@ -33,8 +32,8 @@ export default function RootLayout({
         lang="en"
         className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
       >
-        <body className="min-h-full flex flex-col font-sans">
-          <EditorLayout>{children}</EditorLayout>
+        <body className="min-h-full flex flex-col">
+          {children}
         </body>
       </html>
     </ClerkProvider>
