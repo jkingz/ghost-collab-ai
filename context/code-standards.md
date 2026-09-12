@@ -36,10 +36,12 @@
 
 ## Data and Storage
 
-- Project metadata and relationships belong in PostgreSQL via Prisma.
+- Project metadata and relationships belong in Supabase Postgres via the server Supabase client.
 - Canvas snapshots and generated specs belong in Vercel Blob; Prisma stores only the blob URL reference.
 - Do not store large generated content directly in the database.
 - Task run records are first-class relational data — treat ownership and run IDs as verified before any token issuance.
+- Never expose Supabase secret/service-role keys to client components or `NEXT_PUBLIC_*` variables.
+- Enable RLS on every exposed table and write policies for the actual owner/collaborator access model.
 
 ## File Organization
 

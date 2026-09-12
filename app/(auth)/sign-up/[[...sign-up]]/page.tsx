@@ -1,25 +1,28 @@
-import { SignUp } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs"
+import { AuthProductPanel } from "@/components/auth/auth-product-panel"
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen grid lg:grid-cols-2">
-      <div className="hidden lg:flex flex-col justify-center px-12 bg-card">
-        <div className="max-w-md">
-          <h1 className="text-2xl font-bold mb-2">Ghost AI</h1>
-          <p className="text-muted-foreground mb-8">
-            Real-time collaborative system design workspace
-          </p>
-          <ul className="space-y-3 text-sm text-muted-foreground">
-            <li>Design system architectures with AI assistance</li>
-            <li>Collaborate in real-time with your team</li>
-            <li>Generate technical specifications from your designs</li>
-            <li>Import starter templates to accelerate your workflow</li>
-          </ul>
+    <main className="grid min-h-[100dvh] bg-background lg:grid-cols-2">
+      <AuthProductPanel />
+      <section className="flex min-h-[100dvh] items-center justify-center px-6 py-10 sm:px-10 lg:px-12">
+        <div className="w-full max-w-[420px]">
+          <div className="mb-8 lg:hidden">
+            <div className="flex items-center gap-3 text-sm font-medium tracking-[0.18em] text-foreground">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                G
+              </span>
+              GHOST Collab AI
+            </div>
+          </div>
+          <SignUp
+            path="/sign-up"
+            routing="path"
+            signInUrl="/sign-in"
+            fallbackRedirectUrl="/editor"
+          />
         </div>
-      </div>
-      <div className="flex items-center justify-center p-8">
-        <SignUp />
-      </div>
-    </div>
-  );
+      </section>
+    </main>
+  )
 }

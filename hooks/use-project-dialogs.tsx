@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import type { Project } from "@/types/project"
 
 type DialogType = "create" | "rename" | "delete" | null
 
@@ -10,7 +11,7 @@ interface ProjectDialogState {
   projectName?: string
 }
 
-export function useProjectDialogs() {
+export function useProjectDialogs(onProjectsChanged?: () => Promise<void>) {
   const [dialogState, setDialogState] = useState<ProjectDialogState>({
     type: null,
   })
@@ -19,6 +20,7 @@ export function useProjectDialogs() {
     slug: "",
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Generate slug from name
   const generateSlug = (name: string): string => {
@@ -34,15 +36,18 @@ export function useProjectDialogs() {
   const openCreateDialog = () => {
     setDialogState({ type: "create" })
     setFormState({ name: "", slug: "" })
+    setError(null)
   }
 
   const openRenameDialog = (projectId: string, currentName: string) => {
     setDialogState({ type: "rename", projectId, projectName: currentName })
     setFormState({ name: currentName, slug: generateSlug(currentName) })
+    setError(null)
   }
 
   const openDeleteDialog = (projectId: string, projectName: string) => {
     setDialogState({ type: "delete", projectId, projectName })
+    setError(null)
   }
 
   // Close dialog
@@ -50,6 +55,7 @@ export function useProjectDialogs() {
     setDialogState({ type: null })
     setFormState({ name: "", slug: "" })
     setIsLoading(false)
+    setError(null)
   }
 
   // Update name and auto-generate slug
@@ -65,13 +71,19 @@ export function useProjectDialogs() {
     if (!formState.name.trim()) return
 
     setIsLoading(true)
+    setError(null)
     try {
-      // Mock delay - no API call yet
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      console.log("Creating project:", formState)
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: formState.name }),
+      })
+      const body = (await response.json()) as { error?: string; project?: Project }
+      if (!response.ok) throw new Error(body.error || "Unable to create project")
+      await onProjectsChanged?.()
       closeDialog()
     } catch (error) {
-      console.error("Error creating project:", error)
+      setError(error instanceof Error ? error.message : "Unable to create project")
     } finally {
       setIsLoading(false)
     }
@@ -82,13 +94,19 @@ export function useProjectDialogs() {
     if (!formState.name.trim() || !dialogState.projectId) return
 
     setIsLoading(true)
+    setError(null)
     try {
-      // Mock delay - no API call yet
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      console.log("Renaming project:", dialogState.projectId, formState)
+      const response = await fetch(`/api/projects/${dialogState.projectId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: formState.name }),
+      })
+      const body = (await response.json()) as { error?: string; project?: Project }
+      if (!response.ok) throw new Error(body.error || "Unable to rename project")
+      await onProjectsChanged?.()
       closeDialog()
     } catch (error) {
-      console.error("Error renaming project:", error)
+      setError(error instanceof Error ? error.message : "Unable to rename project")
     } finally {
       setIsLoading(false)
     }
@@ -99,13 +117,19 @@ export function useProjectDialogs() {
     if (!dialogState.projectId) return
 
     setIsLoading(true)
+    setError(null)
     try {
-      // Mock delay - no API call yet
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      console.log("Deleting project:", dialogState.projectId)
+      const response = await fetch(`/api/projects/${dialogState.projectId}`, {
+        method: "DELETE",
+      })
+      if (!response.ok) {
+        const body = (await response.json()) as { error?: string }
+        throw new Error(body.error || "Unable to delete project")
+      }
+      await onProjectsChanged?.()
       closeDialog()
     } catch (error) {
-      console.error("Error deleting project:", error)
+      setError(error instanceof Error ? error.message : "Unable to delete project")
     } finally {
       setIsLoading(false)
     }
@@ -115,6 +139,7 @@ export function useProjectDialogs() {
     dialogState,
     formState,
     isLoading,
+    error,
     openCreateDialog,
     openRenameDialog,
     openDeleteDialog,

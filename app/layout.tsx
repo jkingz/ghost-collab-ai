@@ -26,7 +26,37 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider
-      appearance={dark}
+      appearance={{
+        ...dark,
+        variables: {
+          ...dark.variables,
+          colorPrimary: "var(--primary)",
+          colorPrimaryForeground: "var(--primary-foreground)",
+          colorWarning: "var(--primary)",
+          colorDanger: "var(--destructive)",
+          colorForeground: "var(--foreground)",
+          colorMutedForeground: "var(--muted-foreground)",
+          colorBackground: "var(--card)",
+          colorInput: "var(--background)",
+          colorInputForeground: "var(--foreground)",
+          colorBorder: "var(--border)",
+          colorRing: "var(--ring)",
+          fontFamily: "var(--font-geist-sans)",
+          fontFamilyButtons: "var(--font-geist-sans)",
+          fontFamilyMono: "var(--font-geist-mono)",
+          borderRadius: "0.75rem",
+        },
+        elements: {
+          card: "bg-card border border-border shadow-none",
+          headerTitle: "text-foreground",
+          headerSubtitle: "text-muted-foreground",
+          socialButtonsBlockButton:
+            "bg-secondary border-border text-secondary-foreground hover:bg-accent",
+          formFieldInput: "bg-background border-border text-foreground",
+          formButtonPrimary: "bg-primary text-primary-foreground hover:bg-primary/90",
+          footerActionLink: "text-primary hover:text-primary/80",
+        },
+      }}
     >
       <html
         lang="en"

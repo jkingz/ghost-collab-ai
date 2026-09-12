@@ -35,3 +35,15 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 # ghost-collab-ai
+
+## Supabase persistence setup
+
+The application keeps Clerk as its identity provider and uses Supabase Postgres for project persistence.
+
+1. Create or select a Supabase project.
+2. Connect the Clerk instance to Supabase using Clerk's Supabase integration, then add Clerk as a Supabase Third-Party Auth provider.
+3. Add the variables from `.env.example` to `.env.local`.
+4. Apply `supabase/migrations/20260912222527_project_persistence.sql` through the Supabase CLI or SQL editor.
+5. Verify that the Clerk session token contains the `role: authenticated` claim.
+
+The project API is available at `/api/projects`. The database migration enables RLS and allows owners to manage project metadata while collaborators can read projects they belong to.
