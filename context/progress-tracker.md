@@ -47,10 +47,14 @@ Update this file after every meaningful implementation change.
   - Wired create, rename, and delete dialogs to the API and refresh behavior.
   - Added loading and request-error states to the project sidebar and dialogs.
   - Updated architecture and code standards to use Supabase instead of Prisma.
+  - Restructured documentation: concise feature specs in `/context/feature-specs`, detailed integration guides in `/docs`.
 
 ## In Progress
 
-- Supabase project and migrations are configured. Clerk Third-Party Auth is still pending in the Supabase dashboard.
+- **Manual Configuration Required:** Clerk Third-Party Auth must be configured in the Supabase dashboard.
+  - See: `docs/clerk-supabase-auth-setup.md` for step-by-step instructions
+  - JWKS URL: `https://funny-elephant-2247.clerk.accounts.dev/.well-known/jwks.json`
+  - After configuration, test by creating a project through the UI
 
 ## Open Questions
 
@@ -79,3 +83,6 @@ Update this file after every meaningful implementation change.
 - The `project_persistence` and `optimize_project_policies` migrations are applied to the hosted `ghost-collab-ai` Supabase project.
 - Supabase security advisors report no findings. The performance advisor only reports the currently unused membership index while the table is empty.
 - Supabase environment variables are present in `.env.local`; the Supabase Third-Party Auth page currently has no providers configured.
+- Documentation restructured on 2026-09-14: feature specs remain concise in `/context/feature-specs/`, detailed integration documentation moved to `/docs/`.
+- Updated `AGENTS.md` with documentation maintenance rules for future feature additions.
+- Implementation verification completed 2026-09-14: All code for 05-supabase.md is complete. Only manual Clerk Third-Party Auth configuration in Supabase dashboard remains.
