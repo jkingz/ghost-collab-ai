@@ -111,13 +111,17 @@ ghost-ai/
 │   ├── api/               # API routes for projects and Liveblocks auth
 │   └── (routes)/          # Page routes
 ├── components/            # React components
+│   ├── ui/               # shadcn/ui primitives
+│   └── editor/           # Editor-specific components
 ├── lib/                   # Utilities and service layers
 │   ├── supabase/         # Database client and operations
 │   └── projects/         # Project persistence logic
 ├── trigger/              # Background task definitions
 ├── supabase/migrations/  # Database schema
 ├── types/                # TypeScript definitions
-└── context/              # Project documentation
+├── context/              # Project documentation and specifications
+│   └── feature-specs/    # Concise implementation specs
+└── docs/                 # Detailed integration guides
 ```
 
 ## Database Schema
@@ -152,6 +156,10 @@ Complete architecture and design context is available in the `/context` director
 - `architecture-context.md` — Stack, boundaries, and storage model
 - `ui-context.md` — Design system and component conventions
 - `progress-tracker.md` — Current status and next steps
+- `feature-specs/` — Concise implementation specifications
+
+Detailed integration guides are in `/docs`:
+- `supabase-integration.md` — Database setup, RLS, Clerk integration, and future extensions
 
 ## License
 
